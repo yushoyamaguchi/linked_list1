@@ -42,14 +42,14 @@ impl Node{
 pub fn insert(node:Option<Box<Node>>,data:isize)->Option<Box<Node>>{
   return match node{
     None=>{
-      Some(Box::new(Node::new(data)))//変える
+      Some(Box::new(Node::new(data)))//ありえない
     }
     Some(v)=>{
       let mut cur_node=v.clone();
-      //println!("passed node of {}",cur_node.data);
+      println!("passed node of {}",cur_node.data);
       if data<0{
         println!("cannot treat numbers less than zero");
-        return None;
+        return Some(cur_node);
       }
       let _next_ref = match &mut cur_node.next {
         Some(next_node)=>{
@@ -60,7 +60,6 @@ pub fn insert(node:Option<Box<Node>>,data:isize)->Option<Box<Node>>{
             println!("already exist");
           }
           else if next_node.data>data{
-            //let mut previous=&mut cur_node;
             let new_node=Node{
               is_head:false,
               data,
@@ -83,6 +82,42 @@ pub fn insert(node:Option<Box<Node>>,data:isize)->Option<Box<Node>>{
   };
 }
 
+pub fn delete (node:Option<Box<Node>>,data:isize)->bool{
+  return match node{
+    None=>{
+      return false;//ありえない
+    }
+    Some(v)=>{
+      let mut cur_node=v.clone();
+      if data<0{
+        println!("cannot treat numbers less than zero");
+        return false;
+      }
+      let _next_ref = match &mut cur_node.next {
+        Some(next_node)=>{
+          if next_node.data<data{
+            return delete(cur_node.next,data);
+          }
+          else if next_node.data==data{
+            cur_node.next=next_node.next.as_ref().map(|x| x.clone());
+            println!("delete {}",data);
+            return true;
+          }
+          else if next_node.data>data{
+            println!("no node {}",data);
+            return false;
+          }
+        }
+        None=>{
+          println!("no node {}",data);
+          return false;
+        }
+      };
+      return true;
+    }
+  };
+}
+
 
 
 
@@ -99,6 +134,8 @@ fn main() {
   head=insert(head,4);
   head=insert(head,10);
   head=insert(head,8);
+  head=insert(head,-1);
+  //delete(head,8);
   head=insert(head,18);
   
   //先頭のioのところコメント外す
