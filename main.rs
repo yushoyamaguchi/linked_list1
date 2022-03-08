@@ -82,7 +82,7 @@ pub fn insert(node:Option<Box<Node>>,data:isize)->Option<Box<Node>>{
   };
 }
 
-pub fn delete (node:Option<Box<Node>>,data:isize)->bool{
+pub fn delete (node:&mut Option<Box<Node>>,data:isize)->bool{
   return match node{
     None=>{
       return false;//ありえない
@@ -96,11 +96,12 @@ pub fn delete (node:Option<Box<Node>>,data:isize)->bool{
       let _next_ref = match &mut cur_node.next {
         Some(next_node)=>{
           if next_node.data<data{
-            return delete(cur_node.next,data);
+            return delete(&mut cur_node.next,data);
           }
           else if next_node.data==data{
             cur_node.next=next_node.next.as_ref().map(|x| x.clone());
             println!("delete {}",data);
+            println!("prev={}",cur_node.data);
             return true;
           }
           else if next_node.data>data{
@@ -132,11 +133,17 @@ fn main() {
 
   let mut head=Some(Box::new(dummy_head));
   head=insert(head,4);
+  println!("------------");
   head=insert(head,10);
+  println!("------------");
   head=insert(head,8);
+  println!("------------");
   head=insert(head,-1);
-  //delete(head,8);
+  println!("------------");
+  delete(&mut head,8);
+  delete(&mut head,10);
   head=insert(head,18);
+  println!("------------");
   
   //先頭のioのところコメント外す
   /*let mut end_flag=0;
