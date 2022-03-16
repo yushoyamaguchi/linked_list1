@@ -99,7 +99,16 @@ pub fn delete (node:&mut Option<Box<Node>>,data:isize)->bool{
             return delete(&mut cur_node.next,data);
           }
           else if next_node.data==data{
-            cur_node.next=next_node.next.as_ref().map(|x| x.clone());
+            //cur_node.next=next_node.next.as_ref().map(|x| x.clone());
+            let _show_next=match &mut next_node.next.as_ref().map(|x| x.clone()) {
+              Some(show)=>{
+                println!("next={}",show.data);
+                cur_node.next=Some(Box::new(*show.clone()));
+              }
+              None=>{
+                println!("none");
+              }
+            };
             println!("delete {}",data);
             println!("prev={}",cur_node.data);
             return true;
@@ -141,7 +150,9 @@ fn main() {
   head=insert(head,-1);
   println!("------------");
   delete(&mut head,8);
-  delete(&mut head,10);
+  println!("------------");
+  delete(&mut head,4);
+  println!("------------");
   head=insert(head,18);
   println!("------------");
   
