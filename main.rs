@@ -82,16 +82,16 @@ pub fn insert(node:Option<Box<Node>>,data:isize)->Option<Box<Node>>{
   };
 }
 
-pub fn delete (node:&mut Option<Box<Node>>,data:isize)->bool{
+pub fn delete (node:&mut Option<Box<Node>>,data:isize)->Option<Box<Node>>{
   return match node{
     None=>{
-      return false;//ありえない
+      return None;//ありえない
     }
     Some(v)=>{
       let mut cur_node=v.clone();
       if data<0{
         println!("cannot treat numbers less than zero");
-        return false;
+        return Some(cur_node);
       }
       let _next_ref = match &mut cur_node.next {
         Some(next_node)=>{
@@ -107,23 +107,24 @@ pub fn delete (node:&mut Option<Box<Node>>,data:isize)->bool{
               }
               None=>{
                 println!("none");
+                cur_node.next=None;
               }
             };
             println!("delete {}",data);
             println!("prev={}",cur_node.data);
-            return true;
+            return Some(cur_node);
           }
           else if next_node.data>data{
             println!("no node {}",data);
-            return false;
+            return Some(cur_node);
           }
         }
         None=>{
           println!("no node {}",data);
-          return false;
+          return Some(cur_node);
         }
       };
-      return true;
+      Some(cur_node)
     }
   };
 }
@@ -149,9 +150,9 @@ fn main() {
   println!("------------");
   head=insert(head,-1);
   println!("------------");
-  delete(&mut head,8);
+  head=delete(&mut head,8);
   println!("------------");
-  delete(&mut head,4);
+  head=delete(&mut head,4);
   println!("------------");
   head=insert(head,18);
   println!("------------");
