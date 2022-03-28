@@ -92,15 +92,15 @@ pub fn insert(node:Option<Box<Node>>,data:isize)->Option<Box<Node>>{
           cur_node.next=Some(Box::new(new_node));
         }
       };
-      Some(cur_node)//変える
+      Some(cur_node)
     }
   };
 }
 
-pub fn delete (node: Option<Box<Node>>,data:isize)->Option<Box<Node>>{
+pub fn delete (node:&mut Option<Box<Node>>,data:isize)->Option<Box<Node>>{
   return match node{
     None=>{
-      return None;//ありえない
+      return None;
     }
     Some(v)=>{
       let mut cur_node=v.clone();
@@ -111,10 +111,9 @@ pub fn delete (node: Option<Box<Node>>,data:isize)->Option<Box<Node>>{
       let _next_ref = match &mut cur_node.next {
         Some(next_node)=>{
           if next_node.data<data{
-            cur_node.next=delete(cur_node.next,data);
+            cur_node.next=delete(&mut cur_node.next,data);
           }
           else if next_node.data==data{
-            //cur_node.next=next_node.next.as_ref().map(|x| x.clone());
             let _show_next=match &mut next_node.next.as_ref().map(|x| x.clone()) {
               Some(show)=>{
                 println!("next={}",show.data);
@@ -167,9 +166,9 @@ fn main() {
   line();
   show(&head);
   line();
-  head=delete(head,8);
+  head=delete(&mut head,8);
   line();
-  head=delete(head,4);
+  head=delete(&mut head,4);
   line();
   show(&head);
   line();
