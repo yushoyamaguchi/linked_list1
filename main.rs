@@ -35,8 +35,23 @@ impl Node{
   pub fn new(data: isize)->Node{
     Node{is_head:false,data:data,next:None}
   }
+}
 
+pub fn show (node:&Option<Box<Node>>){
+  let _ref = match & node {
+    None=>{
+      println!("");
+    }
+    Some(v)=>{
+      let mut cur_node=v.clone();
+      print!("{},",&cur_node.data);
+      show(&cur_node.next);
+    }
+  };
+}
 
+pub fn line(){
+  println!("---------------");
 }
 
 pub fn insert(node:Option<Box<Node>>,data:isize)->Option<Box<Node>>{
@@ -82,7 +97,7 @@ pub fn insert(node:Option<Box<Node>>,data:isize)->Option<Box<Node>>{
   };
 }
 
-pub fn delete (node:&mut Option<Box<Node>>,data:isize)->Option<Box<Node>>{
+pub fn delete (node: Option<Box<Node>>,data:isize)->Option<Box<Node>>{
   return match node{
     None=>{
       return None;//ありえない
@@ -96,7 +111,7 @@ pub fn delete (node:&mut Option<Box<Node>>,data:isize)->Option<Box<Node>>{
       let _next_ref = match &mut cur_node.next {
         Some(next_node)=>{
           if next_node.data<data{
-            return delete(&mut cur_node.next,data);
+            cur_node.next=delete(cur_node.next,data);
           }
           else if next_node.data==data{
             //cur_node.next=next_node.next.as_ref().map(|x| x.clone());
@@ -143,19 +158,23 @@ fn main() {
 
   let mut head=Some(Box::new(dummy_head));
   head=insert(head,4);
-  println!("------------");
+  line();
   head=insert(head,10);
-  println!("------------");
+  line();
   head=insert(head,8);
-  println!("------------");
+  line();
   head=insert(head,-1);
-  println!("------------");
-  head=delete(&mut head,8);
-  println!("------------");
-  head=delete(&mut head,4);
-  println!("------------");
+  line();
+  show(&head);
+  line();
+  head=delete(head,8);
+  line();
+  head=delete(head,4);
+  line();
+  show(&head);
+  line();
   head=insert(head,18);
-  println!("------------");
+  line();
   
   //先頭のioのところコメント外す
   /*let mut end_flag=0;
