@@ -143,7 +143,40 @@ pub fn delete (node:&mut Option<Box<Node>>,data:isize)->Option<Box<Node>>{
   };
 }
 
-
+pub fn search (node: Option<Box<Node>>,data:isize)->Option<Box<Node>>{
+  return match node{
+    None=>{
+      return None;
+    }
+    Some(v)=>{
+      let mut cur_node=v.clone();
+      if data<0{
+        println!("cannot treat numbers less than zero");
+        return Some(cur_node);
+      }
+      let _next_ref = match &mut cur_node.next {
+        Some(next_node)=>{
+          if next_node.data<data{
+            cur_node.next=search(cur_node.next,data);
+          }
+          else if next_node.data==data{
+            println!("find! {} ",data);
+            return Some(cur_node);
+          }
+          else if next_node.data>data{
+            println!("cannot find {}",data);
+            return Some(cur_node);
+          }
+        }
+        None=>{
+          println!("no node {}",data);
+          return Some(cur_node);
+        }
+      };
+      Some(cur_node)
+    }
+  };
+}
 
 
 
@@ -166,6 +199,8 @@ fn main() {
   line();
   show(&head);
   line();
+  head=search(head,9);
+  line();
   head=delete(&mut head,8);
   line();
   head=delete(&mut head,4);
@@ -175,7 +210,6 @@ fn main() {
   head=insert(head,18);
   line();
   
-  //先頭のioのところコメント外す
   /*let mut end_flag=0;
   println!("press q to quit");
   let str_i = String::from("i");
